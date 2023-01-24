@@ -69,7 +69,7 @@
         )
     (with-temp-buffer
       (let ((
-             cmd-str (concat "juvix " (if juvix-disable-embedded-stdlib "--no-stdlib " "") "dev scope "
+             cmd-str (concat "juvix " (if juvix-disable-embedded-stdlib "--no-stdlib " "") "dev scope --with-comments "
                              buff-name)
              ))
         (if (zerop (call-process-shell-command
