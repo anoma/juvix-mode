@@ -74,18 +74,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Utility functions
 
-(defun juvix-input-concat-map (f xs)
-  "Concat (map F XS)."
-  (apply 'append (mapcar f xs)))
-
 (defun juvix-input-to-string-list (s)
   "Convert a string S to a list of one-character strings, after
 removing all space and newline characters."
-  (juvix-input-concat-map
-   (lambda (c) (if (member c (string-to-list " \n"))
-              nil
-            (list (string c))))
-   (string-to-list s)))
+  (mapcan (lambda (c)
+            (if (member c (string-to-list " \n"))
+                nil
+              (list (string c))))
+          (string-to-list s)))
 
 (defun juvix-input-character-range (from to)
   "A string consisting of the characters from FROM to TO."
@@ -99,7 +95,7 @@ removing all space and newline characters."
 
 (defun juvix-input-compose (f g)
   "\x -> concatMap F (G x)"
-    (lambda (x) (juvix-input-concat-map f (funcall g x))))
+    (lambda (x) (mapcan f (funcall g x))))
 
 (defun juvix-input-or (f g)
   "\x -> F x ++ G x"
@@ -113,48 +109,56 @@ removing all space and newline characters."
   "Prepend PREFIX to all key sequences."
     (lambda (x) `((,(concat prefix (car x)) . ,(cdr x)))))
 
-(defun juvix-input-prefix (prefix)
-  "Only keep pairs whose key sequence starts with PREFIX."
-    (lambda (x)
-      (if (equal (substring (car x) 0 (length prefix)) prefix)
-          (list x))))
+(defun juvix-input-prefix-curry (prefix)
+  (lambda (pair)
+    (list (juvix-input-prefix prefix pair))))
 
-(defun juvix-input-suffix (suffix)
+(defun juvix-input-prefix (prefix pair)
+  "Only keep pairs whose key sequence starts with PREFIX."
+  (when (equal (substring (car pair) 0 (length prefix)) prefix)
+    pair))
+
+(defun juvix-input-suffix (suffix pair)
   "Only keep pairs whose key sequence ends with SUFFIX."
-    (lambda (x)
-      (if (equal (substring (car x)
-                            (- (length (car x)) (length suffix)))
+    (when (equal (substring (car pair)
+                            (- (length (car pair)) (length suffix)))
                  suffix)
-          (list x))))
+      pair))
 
 (defun juvix-input-drop (ss)
   "Drop pairs matching one of the given key sequences.
 SS should be a list of strings."
     (lambda (x) (unless (member (car x) ss) (list x))))
 
-(defun juvix-input-drop-beginning (n)
-  "Drop N characters from the beginning of each key sequence."
-    (lambda (x) `((,(substring (car x) n) . ,(cdr x)))))
+(defun on-car (f list)
+  "calls the function f on the car of the list if it exists"
+  (when list
+    (cons (funcall f (car list)) (cdr list))))
 
-(defun juvix-input-drop-end (n)
+(defun juvix-input-drop-end (n xs)
   "Drop N characters from the end of each key sequence."
-    (lambda (x)
-      `((,(substring (car x) 0 (- (length (car x)) n)) .
-         ,(cdr x)))))
+  (on-car (lambda (x) (substring x 0 (- (length x) n))) xs))
 
-(defun juvix-input-drop-prefix (prefix)
+(defun juvix-input-drop-beginning (n xs)
+  "Drop N characters from the beginning of each key sequence."
+  (on-car (lambda (x) (substring x n)) xs))
+
+
+(defun juvix-input-drop-prefix-curry (prefix)
+  (lambda (xs)
+    (list (juvix-input-drop-prefix prefix xs))))
+
+(defun juvix-input-drop-prefix (prefix xs)
   "Only keep pairs whose key sequence starts with PREFIX.
 This prefix is dropped."
-  (juvix-input-compose
-   (juvix-input-drop-beginning (length prefix))
-   (juvix-input-prefix prefix)))
+  (juvix-input-drop-beginning (length prefix)
+                              (juvix-input-prefix prefix xs)))
 
-(defun juvix-input-drop-suffix (suffix)
+(defun juvix-input-drop-suffix (suffix xs)
   "Only keep pairs whose key sequence ends with SUFFIX.
 This suffix is dropped."
-    (juvix-input-compose
-     (juvix-input-drop-end (length suffix))
-     (juvix-input-suffix suffix)))
+  (juvix-input-drop-end (length suffix)
+                        (juvix-input-suffix suffix xs)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Customization
@@ -170,8 +174,7 @@ This suffix is dropped."
   "The juvix input method.
 After tweaking these settings you may want to inspect the resulting
 translations using `juvix-input-show-translations'."
-  :group 'juvix
-  )
+  :group 'juvix)
 
 (defcustom juvix-input-tweak-all
   '(juvix-input-compose
@@ -196,12 +199,12 @@ order for the change to take effect."
   `(("TeX" . (juvix-input-compose
               (juvix-input-drop '("geq" "leq" "bullet" "qed" "par"))
               (juvix-input-or
-               (juvix-input-drop-prefix "\\")
+               (juvix-input-drop-prefix-curry "\\")
                (juvix-input-or
                 (juvix-input-compose
                  (juvix-input-drop '("^l" "^o" "^r" "^v"))
-                 (juvix-input-prefix "^"))
-                (juvix-input-prefix "_"))))))
+                 (juvix-input-prefix-curry "^"))
+                (juvix-input-prefix-curry "_"))))))
   "A list of Quail input methods whose translations should be
 inherited by the juvix input method (with the exception of
 translations corresponding to ASCII characters).
@@ -1208,7 +1211,7 @@ Each pair in the list has the form (KEY-SEQUENCE . TRANSLATION)."
 TRANS is a list of pairs (KEY-SEQUENCE . TRANSLATION). The
 translations are appended to the current translations."
   (with-temp-buffer
-    (dolist (tr (juvix-input-concat-map (eval juvix-input-tweak-all) trans))
+    (dolist (tr (mapcan (eval juvix-input-tweak-all) trans))
       (quail-defrule (car tr) (cdr tr) "juvix" t))))
 
 (defun juvix-input-inherit-package (qp &optional fun)
@@ -1220,8 +1223,7 @@ It is given a pair (KEY-SEQUENCE . TRANSLATION) and should return
 a list of such pairs."
   (let ((trans (juvix-input-get-translations qp)))
     (juvix-input-add-translations
-     (if fun (juvix-input-concat-map fun trans)
-       trans))))
+     (if fun (mapcan fun trans) trans))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Setting up the input method
