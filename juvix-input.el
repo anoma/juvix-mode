@@ -185,10 +185,13 @@ After tweaking these settings you may want to inspect the resulting
 translations using `juvix-input-show-translations'."
   :group 'juvix)
 
-(defcustom juvix-input-tweak-all
-  '(juvix-input-compose
-    (juvix-input-prepend "\\")
-    (juvix-input-nonempty))
+(defun input-tweak (input)
+  (funcall (juvix-input-compose
+            (juvix-input-prepend "\\")
+            (juvix-input-nonempty))
+           input))
+
+(defcustom juvix-input-tweak-all #'input-tweak
   "An expression yielding a function which can be used to tweak
 all translations before they are included in the input method.
 The resulting function (if non-nil) is applied to every
@@ -204,15 +207,19 @@ order for the change to take effect."
   :initialize 'custom-initialize-default
   :type 'sexp)
 
+(defun tex-inherit (x)
+  (funcall (juvix-input-compose
+            (juvix-input-drop '("geq" "leq" "bullet" "qed" "par"))
+            (juvix-input-or
+             (juvix-input-drop-prefix-curry "\\")
+             (juvix-input-compose
+              (juvix-input-drop '("^l" "^o" "^r" "^v"))
+              (juvix-input-prefix-curry "^"))
+             (juvix-input-prefix-curry "_")))
+           x))
+
 (defcustom juvix-input-inherit
-  `(("TeX" . (juvix-input-compose
-              (juvix-input-drop '("geq" "leq" "bullet" "qed" "par"))
-              (juvix-input-or
-               (juvix-input-drop-prefix-curry "\\")
-               (juvix-input-compose
-                (juvix-input-drop '("^l" "^o" "^r" "^v"))
-                (juvix-input-prefix-curry "^"))
-               (juvix-input-prefix-curry "_")))))
+  `(("TeX" . ,#'tex-inherit))
   "A list of Quail input methods whose translations should be
 inherited by the juvix input method (with the exception of
 translations corresponding to ASCII characters).
@@ -1219,7 +1226,7 @@ Each pair in the list has the form (KEY-SEQUENCE . TRANSLATION)."
 TRANS is a list of pairs (KEY-SEQUENCE . TRANSLATION). The
 translations are appended to the current translations."
   (with-temp-buffer
-    (dolist (tr (mapcan (eval juvix-input-tweak-all) trans))
+    (dolist (tr (mapcan juvix-input-tweak-all trans))
       (quail-defrule (car tr) (cdr tr) "juvix" t))))
 
 (defun juvix-input-inherit-package (qp &optional fun)
@@ -1257,7 +1264,7 @@ tasks as well."
                    juvix-input-translations)))
   (dolist (def juvix-input-inherit)
     (juvix-input-inherit-package (car def)
-                                (eval (cdr def)))))
+                                 (cdr def))))
 
 (defun juvix-input-incorporate-changed-setting (sym val)
   "Update the juvix input method based on the customisable
