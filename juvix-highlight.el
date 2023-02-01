@@ -75,13 +75,10 @@
 (defface juvix-highlight-comment-face
   '((((background light))
      (:foreground "#8b2252"
-      :slant italic
-      ))
+      :slant italic))
     (((background dark))
      (:foreground "#83898d"
-      :slant italic
-      )
-     ))
+      :slant italic)))
   "The face used for comments."
   :group 'juvix-highlight-faces)
 

@@ -16,14 +16,12 @@
             source-original)
   :standard-input t
   :error-patterns
-    (
-     (error line-start (file-name) ":" line ":" column ": error:" (message (one-or-more (not "ת"))))
-     (error line-start (file-name) ":" line ":" column "-" end-column ": error:" (message (one-or-more (not "ת"))))
-     (error line-start (file-name) ":" line "-" end-line ":" column ": error:" (message (one-or-more (not "ת"))))
-     (error line-start (file-name) ":" line "-" end-line ":" column "-" end-column ": error:" (message (one-or-more (not "ת"))))
-     )
-  :modes juvix-mode
-  )
+  ((error line-start (file-name) ":" line ":" column ": error:" (message (one-or-more (not "ת"))))
+   (error line-start (file-name) ":" line ":" column "-" end-column ": error:" (message (one-or-more (not "ת"))))
+   (error line-start (file-name) ":" line "-" end-line ":" column ": error:" (message (one-or-more (not "ת"))))
+   (error line-start (file-name) ":" line "-" end-line ":" column "-" end-column ": error:" (message (one-or-more (not "ת")))))
+  :modes juvix-mode)
+
 (add-to-list 'flycheck-checkers 'juvix)
 
 (provide 'flycheck-juvix)
