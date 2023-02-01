@@ -73,6 +73,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Utility functions
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun juvix-input-to-string-list (s)
   "Convert a string S to a list of one-character strings, after
@@ -91,15 +92,26 @@ removing all space and newline characters."
     (concat (nreverse seq))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Utility functions
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun on-car (f list)
+  "calls the function f on the car of the list if it exists"
+  (when list
+    (cons (funcall f (car list)) (cdr list))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Functions used to tweak translation pairs
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun juvix-input-compose (f g)
   "\x -> concatMap F (G x)"
-    (lambda (x) (mapcan f (funcall g x))))
+  (lambda (x) (mapcan f (funcall g x))))
 
-(defun juvix-input-or (f g)
+(defun juvix-input-or (&rest funcs)
   "\x -> F x ++ G x"
-    (lambda (x) (append (funcall f x) (funcall g x))))
+  (lambda (x)
+    (mapcan (lambda (f) (funcall f x)) funcs)))
 
 (defun juvix-input-nonempty ()
   "Only keep pairs with a non-empty first component."
@@ -107,7 +119,9 @@ removing all space and newline characters."
 
 (defun juvix-input-prepend (prefix)
   "Prepend PREFIX to all key sequences."
-    (lambda (x) `((,(concat prefix (car x)) . ,(cdr x)))))
+    (lambda (xs)
+      (list (on-car (lambda (x) (concat prefix x))
+                    xs))))
 
 (defun juvix-input-prefix-curry (prefix)
   (lambda (pair)
@@ -128,12 +142,7 @@ removing all space and newline characters."
 (defun juvix-input-drop (ss)
   "Drop pairs matching one of the given key sequences.
 SS should be a list of strings."
-    (lambda (x) (unless (member (car x) ss) (list x))))
-
-(defun on-car (f list)
-  "calls the function f on the car of the list if it exists"
-  (when list
-    (cons (funcall f (car list)) (cdr list))))
+  (lambda (x) (unless (member (car x) ss) (list x))))
 
 (defun juvix-input-drop-end (n xs)
   "Drop N characters from the end of each key sequence."
@@ -200,11 +209,10 @@ order for the change to take effect."
               (juvix-input-drop '("geq" "leq" "bullet" "qed" "par"))
               (juvix-input-or
                (juvix-input-drop-prefix-curry "\\")
-               (juvix-input-or
-                (juvix-input-compose
-                 (juvix-input-drop '("^l" "^o" "^r" "^v"))
-                 (juvix-input-prefix-curry "^"))
-                (juvix-input-prefix-curry "_"))))))
+               (juvix-input-compose
+                (juvix-input-drop '("^l" "^o" "^r" "^v"))
+                (juvix-input-prefix-curry "^"))
+               (juvix-input-prefix-curry "_")))))
   "A list of Quail input methods whose translations should be
 inherited by the juvix input method (with the exception of
 translations corresponding to ASCII characters).
