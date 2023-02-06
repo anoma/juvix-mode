@@ -24,7 +24,7 @@
   "The face used for functions."
   :group 'juvix-highlight-faces)
 
-(defface juvix-highlight-inductive-face
+(defface juvix-highlight-type-face
   '((((background light))
      (:foreground "#86b300"))
     (((background dark))
