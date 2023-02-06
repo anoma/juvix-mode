@@ -65,32 +65,22 @@
   (interactive)
   (let ((old-point (point))
         (buff-name (buffer-file-name))
-        (buff (current-buffer))
-        )
+        (buff (current-buffer)))
     (with-temp-buffer
-      (let ((
-             cmd-str (concat "juvix " (if juvix-disable-embedded-stdlib "--no-stdlib " "") "dev scope --with-comments "
-                             buff-name)
-             ))
+      (let ((cmd-str (concat "juvix " (if juvix-disable-embedded-stdlib "--no-stdlib " "") "dev scope --with-comments "
+                             buff-name)))
         (if (zerop (call-process-shell-command
                     cmd-str
                     nil
-                    t
-                    ))
+                    t))
             (progn
-              (let
-                  ((text (buffer-string)))
+              (let ((text (buffer-string)))
                 (with-current-buffer buff
                   (erase-buffer)
                   (insert text)
                   (goto-char old-point)
-                  (juvix-load)
-                  )
-                )
-              )
-          (message "error formatting the buffer")
-          )
-        ))))
+                  (juvix-load))))
+          (message "error formatting the buffer"))))))
 
 (defun juvix-goto-definition ()
   "Go to the definition of the symbol at point."
