@@ -42,7 +42,29 @@
        (evil-define-key 'normal juvix-mode-map (kbd "SPC m g") 'juvix-goto-definition)
        (evil-define-key 'normal juvix-mode-map (kbd "SPC m f") 'juvix-format-buffer)
        (evil-define-key 'normal juvix-mode-map (kbd "g d") 'juvix-goto-definition)
-       (evil-normalize-keymaps)))))
+       (evil-normalize-keymaps))))
+
+  (add-hook 'find-file-hook 'juvix-insert-top-module-name)
+  )
+
+(defun juvix-insert-top-module-name ()
+  "Insert the suggested top module name."
+  (letrec ((filename
+            (file-name-sans-extension (buffer-file-name)))
+           (root
+            (file-name-as-directory (string-trim (shell-command-to-string (concat "juvix dev root " filename))))))
+    (when (and filename
+               (= (buffer-size) 0))
+      (letrec ((relative-name
+                (file-relative-name filename root))
+               (in-project
+                (string-prefix-p root filename))
+               (module-name
+                (if in-project
+                (replace-regexp-in-string "/" "." relative-name)
+                (file-name-nondirectory filename))))
+          (progn (insert (concat "module " module-name ";\n"))
+                 (juvix-load))))))
 
 (defun juvix-clear-annotations ()
   "Remove all annotations from the current buffer."
