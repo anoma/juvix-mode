@@ -16,6 +16,15 @@
   "The face used for keywords."
   :group 'juvix-highlight-faces)
 
+;; TODO pick a different color
+(defface juvix-highlight-module-face
+  '((((background light))
+     (:foreground "#f2ae49"))
+    (((background dark))
+     (:foreground "#ebcb8b")))
+  "The face used for modules."
+  :group 'juvix-highlight-faces)
+
 (defface juvix-highlight-function-face
   '((((background light))
      (:foreground "#f2ae49"))
