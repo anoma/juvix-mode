@@ -18,7 +18,7 @@
 
 (defface juvix-highlight-module-face
   '((((background light))
-     (:foreground "#f2ae49"))
+     (:foreground "#478acc"))
     (((background dark))
      (:foreground "#88c0d0")))
   "The face used for modules."
@@ -92,7 +92,7 @@
 
 (defface juvix-highlight-comment-face
   '((((background light))
-     (:foreground "#8b2252"
+     (:foreground "#ba919966"
       :slant italic))
     (((background dark))
      (:foreground "#83898d"
