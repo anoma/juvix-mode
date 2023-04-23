@@ -80,6 +80,16 @@
   "The face used for errors."
   :group 'juvix-highlight-faces)
 
+(defface juvix-highlight-judoc-face
+  '((((background light))
+     (:foreground "#8b2252"
+      :slant italic))
+    (((background dark))
+     (:foreground "#8fbcbb"
+      :slant italic)))
+  "The face used for judoc comments."
+  :group 'juvix-highlight-faces)
+
 (defface juvix-highlight-comment-face
   '((((background light))
      (:foreground "#8b2252"
