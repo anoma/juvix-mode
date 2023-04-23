@@ -80,6 +80,14 @@
   "The face used for errors."
   :group 'juvix-highlight-faces)
 
+(defface juvix-highlight-delimiter-face
+  '((((background light))
+     (:foreground "#ba919966"))
+    (((background dark))
+     (:foreground "#83898d")))
+  "The face used for judoc delimiters: semicolons, parentheses, braces and pipes."
+  :group 'juvix-highlight-faces)
+
 (defface juvix-highlight-judoc-face
   '((((background light))
      (:foreground "#8b2252"
