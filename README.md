@@ -1,4 +1,4 @@
-# emacs-juvix
+# Juvix mode
 The Juvix Emacs mode
 
 ## Features
