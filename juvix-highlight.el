@@ -82,9 +82,9 @@
 
 (defface juvix-highlight-delimiter-face
   '((((background light))
-     (:foreground "#ba919966"))
+     (:foreground "#ba91992e"))
     (((background dark))
-     (:foreground "#83898d")))
+     (:foreground "#5e81ac")))
   "The face used for judoc delimiters: semicolons, parentheses, braces and pipes."
   :group 'juvix-highlight-faces)
 
