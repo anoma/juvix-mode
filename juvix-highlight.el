@@ -88,6 +88,14 @@
   "The face used for judoc delimiters: semicolons, parentheses, braces and pipes."
   :group 'juvix-highlight-faces)
 
+(defface juvix-highlight-pragma-face
+  '((((background light))
+     (:foreground "#85714c"))
+    (((background dark))
+     (:foreground "#cca458")))
+  "The face used for pragma comments."
+  :group 'juvix-highlight-faces)
+
 (defface juvix-highlight-judoc-face
   '((((background light))
      (:foreground "#8b2252"
