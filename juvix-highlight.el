@@ -96,6 +96,14 @@
   "The face used for pragma comments."
   :group 'juvix-highlight-faces)
 
+(defface juvix-highlight-fixity-face
+  '((((background light))
+     (:foreground "#ff7f50"))
+    (((background dark))
+     (:foreground "#deb887")))
+  "The face used for fixities."
+  :group 'juvix-highlight-faces)
+
 (defface juvix-highlight-judoc-face
   '((((background light))
      (:foreground "#8b2252"
