@@ -14,3 +14,6 @@ Get inline error messages with flycheck.
 
 Format your code automatically with `M-x juvix-format-buffer` or `SPC m f`.
 ![format](https://github.com/anoma/juvix-mode/assets/5511599/4b922601-3255-4949-a17f-b7e120263c56)
+
+## Known issues
+- Incompatible with [Doom indent-guides](https://docs.doomemacs.org/v21.12/modules/ui/indent-guides/).
