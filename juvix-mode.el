@@ -104,7 +104,7 @@
   (save-buffer)
   (juvix-clear-annotations)
   (eval (read (shell-command-to-string
-               (concat "juvix " (if juvix-disable-embedded-stdlib "--no-stdlib " "") (if juvix-stdlib-path (concat "--stdlib-path " juvix-stdlib-path " ") "") "dev highlight "
+               (concat "juvix " (concat (mapconcat 'identity juvix-global-flags " ") " ") (if juvix-disable-embedded-stdlib "--no-stdlib " "") (if juvix-stdlib-path (concat "--stdlib-path " juvix-stdlib-path " ") "") "dev highlight "
                        (buffer-file-name)))))
   (save-buffer)
   (juvix-repl-load-file (buffer-file-name)))
@@ -116,7 +116,7 @@
         (buff-name (buffer-file-name))
         (buff (current-buffer)))
     (with-temp-buffer
-      (let ((cmd-str (concat "juvix " (if juvix-disable-embedded-stdlib "--no-stdlib " "") "dev scope --with-comments "
+      (let ((cmd-str (concat "juvix " (concat (mapconcat 'identity juvix-global-flags " ") " ") (if juvix-disable-embedded-stdlib "--no-stdlib " "") "dev scope --with-comments "
                              buff-name)))
         (if (zerop (call-process-shell-command
                     cmd-str
