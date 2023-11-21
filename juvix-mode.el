@@ -25,6 +25,7 @@
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.juvix\\'" . juvix-mode))
+(add-to-list 'auto-mode-alist '("\\.juvix.md\\'" . juvix-mode))
 
 (defun juvix-version ()
   "Return the juvix version."
