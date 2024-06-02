@@ -117,7 +117,7 @@
         (buff-name (buffer-file-name))
         (buff (current-buffer)))
     (with-temp-buffer
-      (let ((cmd-str (concat "juvix " (concat (mapconcat 'identity juvix-global-flags " ") " ") (if juvix-disable-embedded-stdlib "--no-stdlib " "") "dev scope --with-comments "
+      (let ((cmd-str (concat "juvix " (concat (mapconcat 'identity juvix-global-flags " ") " ") (if juvix-disable-embedded-stdlib "--no-stdlib " "") "format "
                              buff-name)))
         (if (zerop (call-process-shell-command
                     cmd-str
