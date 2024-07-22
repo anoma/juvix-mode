@@ -59,22 +59,25 @@
 
 (defun juvix-insert-top-module-name ()
   "Insert the suggested top module name."
-  (letrec ((filename
-            (file-name-sans-extension (buffer-file-name))))
+  (let ((filename (buffer-file-name)))
     (when (and filename
                (= (buffer-size) 0))
-      (letrec ((root
-                 (file-name-as-directory (string-trim (shell-command-to-string (concat "juvix dev root " filename)))))
-               (relative-name
-                (file-relative-name filename root))
-               (in-project
-                (string-prefix-p root filename))
-               (module-name
-                (if in-project
-                (replace-regexp-in-string "/" "." relative-name)
-                (file-name-nondirectory filename))))
-          (progn (insert (concat "module " module-name ";\n"))
-                 (juvix-load))))))
+      (let* ((root
+              (file-name-as-directory (string-trim (shell-command-to-string (concat "juvix dev root " filename)))))
+             (relative-name
+              (file-relative-name filename root))
+             (in-project
+              (string-prefix-p root filename))
+             (module-name
+              (file-name-sans-extension (if in-project
+                                            (replace-regexp-in-string "/" "." relative-name)
+                                          (file-name-nondirectory filename)))))
+        (message "Root: %s" root)
+        (message "Relative Name: %s" relative-name)
+        (message "In Project: %s" in-project)
+        (message "Module Name: %s" module-name)
+        (insert (concat "module " module-name ";\n"))
+        (juvix-load)))))
 
 (define-derived-mode juvix-mode prog-mode (juvix-version)
   (font-lock-mode 0)
