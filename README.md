@@ -1,6 +1,28 @@
 # Juvix mode
 The Juvix Emacs mode
 
+## Installation
+To install juvix-mode, clone this repository to a path of your choice:
+``` shell
+git clone https://github.com/anoma/juvix-mode /path/of/choice/juvix-mode
+```
+
+Then add these lines to your configuration file:
+``` emacs-lisp
+;; add this only if you don't have flycheck already
+(use-package flycheck
+  :ensure t
+  :config
+  (add-hook 'after-init-hook #'global-flycheck-mode))
+
+;; add this only if you don't have posframe already
+(use-package posframe
+  :ensure t)
+
+(push "/path/of/choice/juvix-mode" load-path)
+(require 'juvix-mode nil t)
+```
+
 ## Features
 Load a file with `M-x juvix-load` or `SPC m l` with evil mode.
 After loading, move the cursor to an identifier to see its type and documentation.
