@@ -4,10 +4,6 @@
 (require 'flycheck-juvix)
 (require 'juvix-repl)
 
-(require 'straight)
-
-(straight-use-package 'posframe)
-;; afaik the following requires are only needed to get rid of the warnings
 (require 'posframe)
 
 (defgroup juvix nil
