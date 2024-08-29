@@ -50,6 +50,7 @@
   (interactive)
   (append juvix-global-flags
           (delq nil (list
+                     "--no-colors"
                      (if juvix-disable-embedded-stdlib "--no-stdlib" nil)
                      (if juvix-stdlib-path (concat "--stdlib-path" juvix-stdlib-path) nil)))))
 
