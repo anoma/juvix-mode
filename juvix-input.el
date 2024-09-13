@@ -105,11 +105,11 @@ removing all space and newline characters."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun juvix-input-compose (f g)
-  "\x -> concatMap F (G x)"
+  "\\x -> concatMap F (G x)"
   (lambda (x) (mapcan f (funcall g x))))
 
 (defun juvix-input-or (&rest funcs)
-  "\x -> F x ++ G x"
+  "\\x -> F x ++ G x"
   (lambda (x)
     (mapcan (lambda (f) (funcall f x)) funcs)))
 
