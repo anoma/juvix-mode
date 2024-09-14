@@ -164,7 +164,8 @@ compiler."
        (evil-define-key 'normal juvix-mode-map (kbd "g d") 'juvix-goto-definition)
        (evil-normalize-keymaps)
        (add-hook 'post-command-hook #'juvix-posframe-at-pt)
-       (juvix-insert-top-module-name)))))
+       (juvix-insert-top-module-name)
+       (juvix-load)))))
 
 (defun juvix-clear-annotations ()
   "Remove all annotations from the current buffer."
