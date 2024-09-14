@@ -185,6 +185,7 @@ compiler."
 (defun juvix-format-buffer ()
   "Format the current buffer."
   (interactive)
+  (save-buffer)
   (let ((old-point (point))
         (file-name (buffer-file-name))
         (buff (current-buffer)))
