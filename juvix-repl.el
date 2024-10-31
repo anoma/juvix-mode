@@ -7,8 +7,9 @@
 (defvar juvix-repl-program "juvix"
   "The Juvix program.")
 
-(defvar juvix-repl-program-args '("repl")
-  "The argument to pass to Juvix to launch the REPL.")
+(defun juvix-repl-program-args ()
+  "The arguments to pass to Juvix to launch the REPL."
+ (append (juvix-get-global-flags) '("repl")))
 
 (defvar juvix-repl-mode-map
   (nconc (make-sparse-keymap) comint-mode-map))
