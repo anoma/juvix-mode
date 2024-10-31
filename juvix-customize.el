@@ -15,7 +15,7 @@
 
 (defcustom juvix-global-flags '()
   "Specify a list of additional global flags."
-  :type 'directory
+  :type '(repeat string)
   :group 'juvix)
 
 (provide 'juvix-customize)
