@@ -206,7 +206,6 @@ compiler."
     (if goto-info
         (progn
           (find-file (car goto-info))
-          (juvix-load)
           (goto-char (cdr goto-info)))
       (message "No goto information found at cursor"))))
 
