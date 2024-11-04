@@ -203,6 +203,7 @@ compiler."
   "Go to the definition of the symbol at point."
   (interactive)
   (let ((goto-info (get-text-property (point) 'juvix-goto)))
+    (xref-push-marker-stack)
     (if goto-info
         (progn
           (find-file (car goto-info))
