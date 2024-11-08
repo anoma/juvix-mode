@@ -21,7 +21,7 @@
   "Run an inferior instance of `juvix repl' inside Emacs."
   (interactive)
   (let* ((juvix-program juvix-repl-program)
-         (juvix-program-args juvix-repl-program-args)
+         (juvix-program-args (juvix-repl-program-args))
          (buffer (get-buffer-create juvix-repl-buffer-name))
          (proc-alive (comint-check-proc buffer))
          (process (get-buffer-process buffer)))
