@@ -2,6 +2,18 @@
 The Juvix Emacs mode
 
 ## Installation
+
+### Using straight.el
+
+This installs juvix-mode, to your emacs config
+
+```emacs-lisp
+(use-package juvix-mode :straight (:host github :repo "anoma/juvix-mode")
+  :mode ("\\.\\(juvix\\)$" . juvix-mode))
+```
+
+### Manually
+
 To install juvix-mode, clone this repository to a path of your choice:
 ``` shell
 git clone https://github.com/anoma/juvix-mode /path/of/choice/juvix-mode
