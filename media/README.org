@@ -1,0 +1,4 @@
+#+title: Readme
+
+* Readme
+Run =make clean= and =make= to regenerate the gif files.
