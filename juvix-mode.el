@@ -30,24 +30,10 @@
 (add-to-list 'auto-mode-alist '("\\.juvix.md\\'" . juvix-mode))
 
 (defun juvix-posframe-at-pt ()
-  "Display type if available."
-  (let ((type-info (get-text-property (point) 'help-echo))
+  "Display documentation if available."
+  (let ((type-info (get-text-property (point) 'juvix-info))
         (format-info (get-text-property (point) 'juvix-format)))
-    (when (posframe-workable-p)
-      (if (and type-info
-               (eq major-mode 'juvix-mode))
-          (progn
-            (posframe-show juvix-doc-buffer-name
-                           :string type-info
-                           :border-color "purple"
-                           :poshandler 'posframe-poshandler-window-top-right-corner
-                           :border-width 1
-                           :position (point))
-            (when format-info
-              (with-current-buffer juvix-doc-buffer-name
-                (progn
-                (eval format-info)))))
-        (posframe-delete-all)))))
+    (posframe-info type-info format-info)))
 
 (defun juvix-insert-top-module-name ()
   "Insert the suggested top module name."
@@ -89,14 +75,9 @@
        (evil-define-key 'normal juvix-mode-map (kbd "SPC m f") 'juvix-format-buffer)
        (evil-define-key 'normal juvix-mode-map (kbd "g d") 'juvix-goto-definition)
        (evil-normalize-keymaps)
-       (add-hook 'post-command-hook #'juvix-posframe-at-pt)
+       (add-hook 'post-command-hook #'juvix-posframe-at-pt nil :local)
        (juvix-insert-top-module-name)
        (juvix-load)))))
-
-(defun juvix-clear-annotations ()
-  "Remove all face annotations from the current buffer."
-  (interactive)
-  (remove-list-of-text-properties (point-min) (point-max) '(face help-echo juvix-format juvix-goto)))
 
 (defun juvix-load ()
   "Load and highlight the current buffer."

@@ -3,6 +3,7 @@
 ;;; Commentary:
 ;; See https://github.com/anoma/juvix-mode
 
+(require 'posframe)
 (require 'juvix-customize)
 
 ;;; Code:
@@ -32,6 +33,31 @@
                      "--no-colors"
                      (if juvix-disable-embedded-stdlib "--no-stdlib" nil)
                      (if juvix-stdlib-path (concat "--stdlib-path" juvix-stdlib-path) nil)))))
+
+(defun posframe-info (TEXT &optional INIT)
+  "Create the info frame with some TEXT.
+
+Example: (posframe-info \"some help text\")
+
+TEXT specifies the contents of the created buffer. If nil, all
+posframes will be deleted.
+
+INIT will be evaluated on the created frame."
+
+  (if TEXT
+      (when (posframe-workable-p)
+        (progn
+          (posframe-show juvix-doc-buffer-name
+                         :string TEXT
+                         :border-color "purple"
+                         :poshandler 'posframe-poshandler-window-top-right-corner
+                         :border-width 1
+                         :hidehandler 'posframe-hidehandler-when-buffer-switch
+                         :position (point))
+          (when INIT
+            (with-current-buffer juvix-doc-buffer-name
+              (eval INIT)))))
+    (posframe-delete-all)))
 
 (defun juvix-call (&optional STDOUT_BUFFER &rest ARGS)
   "Call the Juvix compiler.
@@ -81,6 +107,11 @@ compiler."
     (if res
         (car (split-string res "\n"))
       nil)))
+
+(defun juvix-clear-annotations ()
+  "Remove all face annotations from the current buffer."
+  (interactive)
+  (remove-list-of-text-properties (point-min) (point-max) '(face juvix-info juvix-format juvix-goto)))
 
 (provide 'juvix-base)
 ;;; juvix-base.el ends here
