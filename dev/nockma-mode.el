@@ -4,6 +4,7 @@
 ;;; See https://github.com/anoma/juvix-mode
 (require 'juvix-base)
 (require 'juvix-highlight)
+(require 'flycheck-nockma)
 (require 'posframe)
 
 ;;; Code:

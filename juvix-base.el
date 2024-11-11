@@ -34,6 +34,12 @@
                      (if juvix-disable-embedded-stdlib "--no-stdlib" nil)
                      (if juvix-stdlib-path (concat "--stdlib-path" juvix-stdlib-path) nil)))))
 
+(defvar juvix-end-error-char "ת"
+  "An auxiliary character that ends Juvix error messages.")
+
+(defvar rx-message
+    `(message (one-or-more (eval `(not ,juvix-end-error-char)))))
+
 (defun posframe-info (TEXT &optional INIT)
   "Create the info frame with some TEXT.
 
