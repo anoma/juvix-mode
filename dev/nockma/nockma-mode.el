@@ -96,5 +96,19 @@ Maps NockOps to their documentation.")
             (goto-char old-point)
             (nockma-load)))))))
 
+(defun nockma-rules-help ()
+  "Show all Nockma evaluation rules in the doc buffer."
+  (interactive)
+  (let ((res (juvix-call-read "dev" "nockma" "ide" "rules")))
+    (when res
+      (let ((txt-init (read res)))
+        (with-current-buffer (juvix-doc-buffer)
+          (erase-buffer)
+          (fundamental-mode)
+          (insert (car txt-init))
+          (goto-char (point-min))
+          (eval (cdr txt-init))
+          (display-buffer (juvix-doc-buffer)))))))
+
 (provide 'nockma-mode)
 ;;; nockma-mode.el ends here
