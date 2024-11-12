@@ -35,8 +35,13 @@ Maps NockOps to their documentation.")
   (let* ((info-value (get-text-property (point) 'juvix-info))
          (text-and-init (gethash info-value nockma-doc-table)))
     (if text-and-init
+        ;; we show documentation for the nock op
         (posframe-info (car text-and-init) (cdr text-and-init))
-      (posframe-info nil))))
+      (if info-value
+          ;; we show some custom message
+          (let ((format-info (get-text-property (point) 'juvix-format)))
+            (posframe-info info-value format-info))
+        (posframe-info nil)))))
 
 (define-derived-mode nockma-mode prog-mode (juvix-version)
   (font-lock-mode 0)
