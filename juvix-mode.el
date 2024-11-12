@@ -9,6 +9,7 @@
 (require 'flycheck-juvix)
 (require 'juvix-repl)
 (require 'posframe)
+(require 'xref)
 
 ;;; Code:
 
