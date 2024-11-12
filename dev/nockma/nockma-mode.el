@@ -57,7 +57,7 @@ Maps NockOps to their documentation.")
   (interactive)
   (save-buffer)
   (juvix-clear-annotations)
-  (let ((res (juvix-call-read "dev" "nockma" "highlight" (buffer-file-name))))
+  (let ((res (juvix-call-read "dev" "nockma" "ide" "highlight" (buffer-file-name))))
     (when res
       (eval (read res))
       (save-buffer))))
