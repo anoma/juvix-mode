@@ -1,0 +1,10 @@
+* Dev modes
+Some major mode for working with some of Juvix' internal languages are provided
+here.
+
+** Installation
+To install all dev modes add this to your config:
+#+begin_src elisp
+(push "/path/of/choice/juvix-mode/dev" load-path)
+(require 'juvix-dev-modes nil t)
+#+end_src
