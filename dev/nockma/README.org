@@ -1,0 +1,4 @@
+* Readme
+** Know issues
+1. When opening a large nockma file, flycheck might issue a crash error, but after
+   that it'll work normally.
