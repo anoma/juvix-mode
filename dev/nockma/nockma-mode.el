@@ -6,6 +6,7 @@
 (require 'juvix-highlight)
 (require 'flycheck-nockma)
 (require 'posframe)
+(require 'hideshow)
 
 ;;; Code:
 
@@ -43,16 +44,28 @@ Maps NockOps to their documentation.")
             (posframe-info info-value format-info))
         (posframe-info nil)))))
 
+(defun nockma-hide-setup ()
+  "Setup hideshow for nockma-mode to hide cells."
+  (setq-local hs-block-start-regexp "\\[")
+  (setq-local hs-block-end-regexp "\\]")
+  (setq-local hs-isearch-open t))
+
+(defun nockma-toggle-cell ()
+  "Hide/show the contents of a cell."
+  (interactive)
+  (hs-toggle-hiding))
+
 (define-derived-mode nockma-mode prog-mode (juvix-version)
   (font-lock-mode 0)
   (setq-local comment-start "--")
-
+  (nockma-hide-setup)
   (add-hook
    'nockma-mode-hook
    (lambda ()
      (with-eval-after-load 'evil
        (evil-define-key 'normal nockma-mode-map (kbd "SPC m l") 'nockma-load)
        (evil-define-key 'normal nockma-mode-map (kbd "SPC m f") 'nockma-format-buffer)
+       (evil-define-key 'normal nockma-mode-map (kbd "SPC m t") 'nockma-toggle-cell)
        (evil-normalize-keymaps))
      (add-hook 'post-command-hook #'nockma-posframe-at-pt nil :local)
      (nockma-load))))
