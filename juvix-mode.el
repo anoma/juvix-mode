@@ -75,10 +75,10 @@
        (evil-define-key 'normal juvix-mode-map (kbd "SPC m g") 'juvix-goto-definition)
        (evil-define-key 'normal juvix-mode-map (kbd "SPC m f") 'juvix-format-buffer)
        (evil-define-key 'normal juvix-mode-map (kbd "g d") 'juvix-goto-definition)
-       (evil-normalize-keymaps)
-       (add-hook 'post-command-hook #'juvix-posframe-at-pt nil :local)
-       (juvix-insert-top-module-name)
-       (juvix-load)))))
+       (evil-normalize-keymaps))
+     (add-hook 'post-command-hook #'juvix-posframe-at-pt nil :local)
+     (juvix-insert-top-module-name)
+     (juvix-load))))
 
 (defun juvix-load ()
   "Load and highlight the current buffer."

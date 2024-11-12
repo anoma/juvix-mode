@@ -53,9 +53,9 @@ Maps NockOps to their documentation.")
      (with-eval-after-load 'evil
        (evil-define-key 'normal nockma-mode-map (kbd "SPC m l") 'nockma-load)
        (evil-define-key 'normal nockma-mode-map (kbd "SPC m f") 'nockma-format-buffer)
-       (evil-normalize-keymaps)
-       (add-hook 'post-command-hook #'nockma-posframe-at-pt nil :local)
-       (nockma-load)))))
+       (evil-normalize-keymaps))
+     (add-hook 'post-command-hook #'nockma-posframe-at-pt nil :local)
+     (nockma-load))))
 
 (defun nockma-load ()
   "Load and highlight the current buffer."
