@@ -23,7 +23,8 @@
             "--no-colors"
             "dev"
             "nockma"
-            "format" ; TODO create a new command just to parse
+            "ide"
+            "check"
             source-original)
   :standard-input t
   :error-patterns
