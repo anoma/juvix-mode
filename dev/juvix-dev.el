@@ -1,4 +1,4 @@
-;;; juvix-dev.el --- Major modes for working with Juvix's internal languages  -*- lexical-binding: t; -*-
+;;; juvix-dev.el --- Major modes for working with Juvix's internal languages
 
 ;;; Commentary:
 ;;; See https://github.com/anoma/juvix-mode
