@@ -9,6 +9,12 @@
 ;;; Code:
 
 (defvar juvix-doc-buffer-name "*juvix-doc-buffer*")
+(defun juvix-doc-buffer ()
+  "Return the juvix buffer for documentation and create it if it does not exist."
+  (get-buffer-create juvix-doc-buffer-name))
+
+(defvar juvix-float-buffer-name "*juvix-float-buffer*"
+  "Used for posframe floating tips.")
 
 (defvar juvix-error-buffer-name "*juvix-error-buffer*")
 (defun juvix-error-buffer ()
@@ -53,7 +59,7 @@ INIT will be evaluated on the created frame."
   (if TEXT
       (when (posframe-workable-p)
         (progn
-          (posframe-show juvix-doc-buffer-name
+          (posframe-show juvix-float-buffer-name
                          :string TEXT
                          :border-color "purple"
                          :poshandler 'posframe-poshandler-window-top-right-corner
@@ -61,7 +67,7 @@ INIT will be evaluated on the created frame."
                          :hidehandler 'posframe-hidehandler-when-buffer-switch
                          :position (point))
           (when INIT
-            (with-current-buffer juvix-doc-buffer-name
+            (with-current-buffer juvix-float-buffer-name
               (eval INIT)))))
     (posframe-delete-all)))
 
