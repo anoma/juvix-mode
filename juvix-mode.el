@@ -5,7 +5,6 @@
 (require 'juvix-customize)
 (require 'juvix-base)
 (require 'juvix-highlight)
-(require 'juvix-input)
 (require 'flycheck-juvix)
 (require 'juvix-repl)
 (require 'posframe)
@@ -63,8 +62,6 @@
 
 (define-derived-mode juvix-mode prog-mode (juvix-version)
   (font-lock-mode 0)
-  (when juvix-auto-input-method
-    (set-input-method "juvix"))
   (setq-local comment-start "--")
 
   (add-hook
