@@ -5,7 +5,6 @@
 (require 'juvix-customize)
 (require 'juvix-base)
 (require 'juvix-highlight)
-(require 'juvix-input)
 (require 'flycheck-juvix)
 (require 'juvix-repl)
 (require 'posframe)
