@@ -1,29 +1,30 @@
-;;; flycheck-juvix --- Flycheck support for the Juvix programming language
+;;; flycheck-nockma --- Flycheck support for the Nockma programming language
 
 ;;; Commentary:
 ;;; See https://github.com/anoma/juvix-mode
 
 (require 'flycheck)
-(require 'juvix-base)
 (require 'juvix-customize)
+(require 'juvix-base)
 
 ;;; Code:
 
-(defgroup flycheck-juvix nil
-  "Juvix support for Flycheck."
-  :prefix "flycheck-juvix-"
+(defgroup flycheck-nockma nil
+  "Nockma support for Flycheck."
+  :prefix "flycheck-nockma-"
   :group 'flycheck
   :link '(url-link :tag "Github" "https://github.com/anoma/juvix"))
 
-(flycheck-define-checker juvix
-  "A Juvix syntax checker."
+(flycheck-define-checker nockma
+  "A Nockma syntax checker."
   :command ("juvix"
             (eval juvix-global-flags)
             "--ide-end-error-char" (eval juvix-end-error-char)
             "--no-colors"
-            "--stdin" (option-flag "--no-stdlib" juvix-disable-embedded-stdlib)
-            (option "--stdlib-path" juvix-stdlib-path)
-            "typecheck"
+            "dev"
+            "nockma"
+            "ide"
+            "check"
             source-original)
   :standard-input t
   :error-patterns
@@ -31,9 +32,9 @@
    (error line-start (file-name) ":" line ":" column "-" end-column ": error:" (eval rx-message))
    (error line-start (file-name) ":" line "-" end-line ":" column ": error:" (eval rx-message))
    (error line-start (file-name) ":" line "-" end-line ":" column "-" end-column ": error:" (eval rx-message)))
-  :modes juvix-mode)
+  :modes nockma-mode)
 
-(add-to-list 'flycheck-checkers 'juvix)
+(add-to-list 'flycheck-checkers 'nockma)
 
-(provide 'flycheck-juvix)
-;;; flycheck-juvix.el ends here
+(provide 'flycheck-nockma)
+;;; flycheck-nockma.el ends here
